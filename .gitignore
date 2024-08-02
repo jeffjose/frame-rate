@@ -5,6 +5,10 @@ build/
 dist/
 wheels/
 *.egg-info
+output
+output.mp4
+output.webm
+ball
 
 # venv
 .venv

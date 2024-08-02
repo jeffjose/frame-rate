@@ -2,10 +2,13 @@ from PIL import Image, ImageDraw
 import typer
 from tailwind_colors import TAILWIND_COLORS_HEX
 
-def create_image_with_ball(width, height, ball_x, ball_y, ball_size):
-    img = Image.new('RGB', (width, height), (255, 255, 255))
+def create_image_with_ball(width, height, ball_x, ball_y, ball_size, antialias=8):
+    img = Image.new('RGB', (int(width * antialias), int(height * antialias)), (255, 255, 255))
     draw = ImageDraw.Draw(img)
-    draw.ellipse((ball_x, ball_y, ball_x + ball_size, ball_y + ball_size), fill=TAILWIND_COLORS_HEX.FUCHSIA_700)
+
+    draw.ellipse((antialias* ball_x, antialias* ball_y, antialias* (ball_x + ball_size), antialias * (ball_y + ball_size)), fill=TAILWIND_COLORS_HEX.FUCHSIA_700)
+
+    img = img.resize((width, height), resample=Image.Resampling.LANCZOS)
     return img
 
 app = typer.Typer()
@@ -30,16 +33,17 @@ def create(width:int = 800, height: int = 600, input: str = typer.Option(), outp
     frames = []
     x, y = 0, 100
     for i in range(num_frames):
+        print(f'Working on {i + 1}/{num_frames}')
         new_frame = create_image_with_ball(height, height, x, y, 40)
         frames.append(new_frame)
         x += 1
         #y += 40
 
-        filename = f'ball/ball-{str(i).zfill(10)}.png'
+        filename = f'output/ball-{str(i).zfill(10)}.png'
 
         new_frame.save(filename)
 
-    ffmpeg_cmd = f"ffmpeg -framerate {fps} -pattern_type glob -i 'ball/ball*png' {output}"
+    ffmpeg_cmd = f"ffmpeg -framerate {fps} -pattern_type glob -i 'ball/ball*.png' {output}"
     print(ffmpeg_cmd)
 
     # Save into a GIF file that loops forever

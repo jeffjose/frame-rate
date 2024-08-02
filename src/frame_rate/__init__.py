@@ -1,8 +1,17 @@
 import typer
 
-def main() -> int:
-    typer.run(run)
+app = typer.Typer()
 
-def run(name: str) -> int:
-    print("Hello {name}")
+@app.command()
+def hello(name: str) -> int:
+    print(f"Hello {name}")
     return 0
+
+
+@app.command()
+def bye(name: str) -> int:
+    print(f"Bye {name}")
+    return 0
+
+def main():
+    return app()

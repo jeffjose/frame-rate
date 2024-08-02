@@ -1,3 +1,8 @@
+import typer
+
 def main() -> int:
-    print("Hello from frame-rate!")
+    typer.run(run)
+
+def run(name: str) -> int:
+    print("Hello {name}")
     return 0

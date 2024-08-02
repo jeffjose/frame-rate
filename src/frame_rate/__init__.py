@@ -1,3 +1,4 @@
+import PIL
 import typer
 
 app = typer.Typer()
@@ -9,8 +10,8 @@ def hello(name: str) -> int:
 
 
 @app.command()
-def bye(name: str) -> int:
-    print(f"Bye {name}")
+def create(fps: int = None) -> int:
+    print(f"fps {fps}")
     return 0
 
 def main():
